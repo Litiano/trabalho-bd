@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: microsoft/mssql-server-linux:2017-latest
+    restart: always
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: senhaDb123
+    ports:
+      - "1533:1433"
+  web:
+    volumes:
+      - "./:/var/www/html"
+      - "./docker/apache:/etc/apache2"
+    depends_on:
+      - db
+    image: litiano/php-apache:php72-apache-laravel
+    links:
+      - db
+    ports:
+      - "88:80"
+    restart: always
