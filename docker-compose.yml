@@ -10,14 +10,15 @@ services:
     ports:
       - "1533:1433"
     #command: "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P senhaDb123 && 'If(db_id(N'trabalho_db3') IS NULL) create database trabalho_db3;'"
-    #command: >
-    #  bash -c "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P senhaDb123
-    #  -Q \"If(db_id(N'trabalho_db3') IS NULL) create database trabalho_db3;\"" &
+#    command: >
+#      bash -c "sleep 2m && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P senhaDb123
+#      -Q \"If(db_id(N'trabalho_db3') IS NULL) create database trabalho_db;\""
     #command: echo "executando command"
     #entrypoint: echo "executando entrypoing"
   web:
     volumes:
       - "./:/var/www/html"
+      - "./.docker/apache2:/etc/apache2"
     environment:
       APACHE_DOCUMENT_ROOT: /var/www/html/public
     depends_on:
