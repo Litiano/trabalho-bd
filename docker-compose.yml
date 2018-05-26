@@ -1,20 +1,32 @@
 version: '2'
 
 services:
-  db:
-    image: microsoft/mssql-server-linux:2017-latest
-    restart: always
-    environment:
-      ACCEPT_EULA: Y
-      SA_PASSWORD: senhaDb123
-    ports:
-      - "1533:1433"
+#  db:
+#    image: microsoft/mssql-server-linux:2017-latest
+#    restart: always
+#    environment:
+#      ACCEPT_EULA: Y
+#      SA_PASSWORD: senhaDb123
+#    ports:
+#      - "1533:1433"
     #command: "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P senhaDb123 && 'If(db_id(N'trabalho_db3') IS NULL) create database trabalho_db3;'"
 #    command: >
 #      bash -c "sleep 2m && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P senhaDb123
 #      -Q \"If(db_id(N'trabalho_db3') IS NULL) create database trabalho_db;\""
     #command: echo "executando command"
     #entrypoint: echo "executando entrypoing"
+  db:
+    image: mysql:5.7
+    volumes:
+         - "./.data/db:/var/lib/mysql"
+    restart: always
+    environment:
+         MYSQL_ROOT_PASSWORD: root
+         MYSQL_DATABASE: trabalho_db
+         MYSQL_USER: root
+         MYSQL_PASSWORD: root
+    ports:
+        - "3308:3306"
   web:
     volumes:
       - "./:/var/www/html"
