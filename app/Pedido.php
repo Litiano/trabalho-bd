@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -52,5 +53,85 @@ class Pedido extends Model
 
     protected $guarded = [];
 
+    /**
+     * @param string $order
+     * @param int $estabelecimentoId
+     * @return Carbon|mixed
+     */
+    protected static function getDate(string $order = "asc", int $estabelecimentoId = null)
+    {
+        /** @var Pedido $pedido */
+        $query = Pedido::query()->orderBy("data_pedido", $order);
+        if ($estabelecimentoId) {
+            $query->where("id_estabelecimento", $estabelecimentoId);
+        }
+        $pedido = $query->first();
+        if (!$pedido) {
+            return Carbon::now();
+        }
+        return $pedido->data_pedido;
+    }
+
+    /**
+     * @param int $estabelecimentoId
+     * @return Carbon|mixed
+     */
+    public static function getFirstDate(int $estabelecimentoId = null)
+    {
+        return self::getDate("asc", $estabelecimentoId);
+    }
+
+    /**
+     * @param int $estabelecimentoId
+     * @return Carbon|mixed
+     */
+    public static function getLastDate(int $estabelecimentoId = null)
+    {
+        return self::getDate("desc", $estabelecimentoId);
+    }
+
+    /**
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getBestClients(int $limit = 10)
+    {
+        return Pedido::getQuery()
+            ->select(["id_usuario"])
+            ->selectSub("sum(1)", "qty")
+            ->where("status", "=", "Entregue")
+            ->groupBy("id_usuario")
+            ->orderByDesc("qty")
+            ->limit(min(100, $limit))
+            ->get();
+    }
+
+    public static function getBillingByDayOfWeek()
+    {
+        // Add 0 day and 3 hours
+        $dayOfWeek = "DAYOFWEEK(ADDTIME(data_pedido, '0 3'))";
+        $days = Pedido::getQuery()
+            ->selectSub($dayOfWeek, "dayOfWeek")
+            ->selectSub("sum(total_pedido)", "billing_total")
+            ->groupBy(\DB::raw($dayOfWeek))
+            ->orderBy(\DB::raw($dayOfWeek))
+            ->get();
+
+        foreach ($days as &$day) {
+            $day->label = trans("daysOfWeek.mysql.{$day->dayOfWeek}");
+        }
+        return $days;
+    }
+
+    public static function getRatings()
+    {
+        return Pedido::getQuery()
+            ->addSelect("avaliacao")
+            ->selectSub("sum(1)", "qty")
+            ->whereNotNull("avaliacao")
+            ->groupBy("avaliacao")
+            ->orderByDesc("avaliacao")
+            ->get();
+    }
 
 }

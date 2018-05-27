@@ -17,4 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::group(["prefix" => "bi"], function () {
+    Route::get("/", "BiController@index");
+    Route::get("/billing", "BiController@daysOfWeek");
+});
 Route::get('/home', 'HomeController@index')->name('home');

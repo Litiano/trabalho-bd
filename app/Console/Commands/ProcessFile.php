@@ -14,7 +14,7 @@ class ProcessFile extends Command
      *
      * @var string
      */
-    protected $signature = 'precess:file';
+    protected $signature = 'process:file';
 
     /**
      * The console command description.
@@ -40,8 +40,8 @@ class ProcessFile extends Command
      */
     public function handle()
     {
-        $this->setProcessTitle("Processamento do arquivo CSV");
-        $this->info("Processamento do arquivo CSV...");
+        $this->setProcessTitle("Processando arquivo CSV");
+        $this->info("Processando arquivo CSV...");
 
         $file = file_get_contents(base_path('aplicativo.csv'));
         $lines = explode("\n", $file);
@@ -56,11 +56,21 @@ class ProcessFile extends Command
                         continue;// skip first line, header
                     }
                     $data = $this->processLine($line);
+
+                    $total = $data["valor_produtos"] + $data["taxa_entrega"];
+                    if(bccomp($total, $data["total_pedido"], 2) !== 0 && $data["status"] === "Entregue") {
+                        $this->line("");
+                        $this->alert("Igonarando linha com valor total inconsistente!");
+                        $bar->advance();
+                        continue;
+                    }
+
                     Pedido::create($data);
                     $bar->advance();
                 }
             });
             $bar->finish();
+            $this->line("");
             $this->info("Arquivo processado com sucesso!");
         } catch (\Exception $e) {
             $this->line("");
