@@ -43,11 +43,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Pedido whereTotalPedido($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Pedido whereValorProdutos($value)
  * @mixin \Eloquent
+ * @property int $id_tempo
+ * @property int $id_dia
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Pedido whereIdDia($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Pedido whereIdTempo($value)
  */
 class Pedido extends Model
 {
     protected $dates = ["data_pedido", "data_cadastro_usuario"];
-    protected $table = "pedidos";
+    protected $table = "fato_pedido";
 
     public $timestamps = false;
 

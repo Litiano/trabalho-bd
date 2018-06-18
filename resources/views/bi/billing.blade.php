@@ -5,6 +5,9 @@
         <div class="col-md-6">
             <canvas id="chart"></canvas>
         </div>
+        <div class="col-md-6">
+            <canvas id="pie-chart"></canvas>
+        </div>
     </div>
 @endsection
 
@@ -25,6 +28,12 @@
                     }]
                 }
             }
+        });
+
+        let myPieChart = new Chart($("#pie-chart"),{
+            type: 'pie',
+            data: data,
+            options: {}
         });
     </script>
 @endsection

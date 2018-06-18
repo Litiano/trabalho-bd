@@ -2,10 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Dim\Data\Dia;
+use App\Dim\Tempo;
+use App\Estabelecimento;
 use App\Pedido;
+use App\Usuario;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Date\Date;
 
 class ProcessFile extends Command
 {
@@ -56,6 +61,11 @@ class ProcessFile extends Command
                         continue;// skip first line, header
                     }
                     $data = $this->processLine($line);
+                    Estabelecimento::updateOrCreate(["id" => $data["id_estabelecimento"]], ["tipo" => $data["tipo_estabelecimento"]]);
+                    unset($data["tipo_estabelecimento"]);
+
+                    Usuario::updateOrCreate(["id" => $data["id_usuario"]], ["ddd" => $data["ddd_usuario"], "data_cadastro" => $data["data_cadastro_usuario"]]);
+                    unset($data["ddd_usuario"], $data["data_cadastro_usuario"]);
 
                     $total = $data["valor_produtos"] + $data["taxa_entrega"];
                     if(bccomp($total, $data["total_pedido"], 2) !== 0 && $data["status"] === "Entregue") {
@@ -64,6 +74,11 @@ class ProcessFile extends Command
                         $bar->advance();
                         continue;
                     }
+
+                    $data["id_tempo"] = Tempo::getTempo($data["data_pedido"])->id;
+                    $data["id_dia"] = Dia::getDia($data["data_pedido"])->id;
+                    //unset($data["data_pedido"]);
+                    //dd($data);
 
                     Pedido::create($data);
                     $bar->advance();
@@ -96,7 +111,7 @@ class ProcessFile extends Command
             $item = trim($item);
         });
 
-        $data["data_pedido"] = Carbon::createFromFormat("Y-m-d H:i", "{$columns[0]} {$columns[1]}");
+        $data["data_pedido"] = Date::createFromFormat("Y-m-d H:i", "{$columns[0]} {$columns[1]}");
         //$data["DIA_PEDIDO"] = $columns[2]; //não precisa
         $data["valor_produtos"] = $columns[3];
         $data["taxa_entrega"] = $columns[4];
@@ -108,7 +123,7 @@ class ProcessFile extends Command
         $data["tipo_estabelecimento"] = $columns[10];
         $data["id_usuario"] = $columns[11];
         $data["ddd_usuario"] = $columns[12];
-        $data["data_cadastro_usuario"] = Carbon::createFromFormat("Y-m-d", $columns[13]);
+        $data["data_cadastro_usuario"] = Date::createFromFormat("Y-m-d", $columns[13]);
         $data["primeiro_pedido"] = mb_strtolower($columns[14]) === "sim" ? true : false;
         $data["bairro_usuario"] = $columns[15];
         $data["cidade_usuario"] = $columns[16];

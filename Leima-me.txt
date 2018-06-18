@@ -1,0 +1,7 @@
+Cubo Vendas
+
+- fato_venda
+    * dim_localizacao - Cidade, Bairro
+    * dim_tempo - Ano, Mês, Dia, (manhã, tarde, noite),
+    * dim_estabelecimento
+    * dim_dispositivo

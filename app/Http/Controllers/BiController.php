@@ -43,6 +43,8 @@ class BiController extends Controller
                 "fill" => true, "borderColor" => "rgb(75, 192, 192)", "lineTension" => 0.5]
         ];
 
+
+
         return view("bi.billing", compact("data", "days"));
     }
 }
