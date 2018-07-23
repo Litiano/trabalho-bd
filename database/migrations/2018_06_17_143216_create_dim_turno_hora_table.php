@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDimTempoDiaTable extends Migration
+class CreateDimTurnoHoraTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateDimTempoDiaTable extends Migration
      */
     public function up()
     {
-        Schema::create('dim_tempo_dia', function (Blueprint $table) {
+        Schema::create('dim_turno_hora', function (Blueprint $table) {
             $table->unsignedInteger('id')->primary();
-            $table->unsignedInteger('hora');
             $table->string('turno');
+            $table->unsignedInteger('hora');
         });
     }
 
@@ -27,6 +27,6 @@ class CreateDimTempoDiaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dim_tempo_dia');
+        Schema::dropIfExists('dim_turno_hora');
     }
 }

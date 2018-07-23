@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDimEstabelecimentoTable extends Migration
+class CreateDimGeograficaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateDimEstabelecimentoTable extends Migration
      */
     public function up()
     {
-        Schema::create('dim_estabelecimento', function (Blueprint $table) {
-            $table->unsignedInteger('id')->primary();
-            $table->string('tipo');
+        Schema::create('dim_geografica', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('cidade');
+            $table->string('bairro');
         });
     }
 
@@ -26,6 +27,6 @@ class CreateDimEstabelecimentoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dim_estabelecimento');
+        Schema::dropIfExists('dim_geografica');
     }
 }

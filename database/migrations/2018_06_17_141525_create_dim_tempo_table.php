@@ -20,9 +20,9 @@ class CreateDimTempoTable extends Migration
             $table->string("mes_nome");
             $table->unsignedInteger("ano");
             //$table->unsignedInteger("bimestre");
-            $table->unsignedInteger("trimestre");
+            //$table->unsignedInteger("trimestre");
             //$table->unsignedInteger("quadrimestre");
-            $table->unsignedInteger("semana_ano");
+            //$table->unsignedInteger("semana_ano");
             $table->unsignedInteger("dia_semana");
             $table->string("dia_semana_nome");
         });
