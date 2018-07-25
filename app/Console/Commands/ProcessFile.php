@@ -45,6 +45,11 @@ class ProcessFile extends Command
      */
     public function handle()
     {
+        setlocale(LC_ALL, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+
+
+        \Carbon\Carbon::setLocale('pt_BR');
+
         $this->setProcessTitle("Processando arquivo CSV");
         $this->info("Processando arquivo CSV...");
 
@@ -121,7 +126,7 @@ class ProcessFile extends Command
             $item = trim($item);
         });
 
-        $data["data_pedido"] = Carbon::createFromFormat("Y-m-d H:i", "{$columns[0]} {$columns[1]}");
+        $data["data_pedido"] = Date::createFromFormat("Y-m-d H:i", "{$columns[0]} {$columns[1]}");
         $data["valor_produtos"] = $columns[3];
         $data["taxa_entrega"] = $columns[4];
         $data["total_pedido"] = $columns[5];

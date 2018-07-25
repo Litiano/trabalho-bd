@@ -3,7 +3,7 @@
 namespace App\Dimensao;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 
 class Tempo extends Model
 {

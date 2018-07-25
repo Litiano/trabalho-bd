@@ -3,7 +3,7 @@
 namespace App\Dimensao;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 
 class Turno extends Model
 {
@@ -27,14 +27,14 @@ class Turno extends Model
     protected static function getTurno($hora)
     {
         if($hora >= 5 && $hora <= 12) {
-            return "Manhã";
+            return "1-Manhã";
         }
 
         if($hora > 12 && $hora <= 18) {
-            return "Tarde";
+            return "2-Tarde";
         }
 
-        return "Noite";
+        return "3-Noite";
 
     }
 }
